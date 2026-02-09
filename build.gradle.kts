@@ -15,16 +15,16 @@ plugins {
 }
 
 toolkitLoomHelper {
-//    useOneConfig {
-//        version = "1.0.0-alpha.173"
-//        loaderVersion = "1.1.0-alpha.53"
-//        usePolyMixin = true
-//        polyMixinVersion = "0.8.4+build.7"
-//        applyLoaderTweaker = true
-//        for (module in arrayOf("commands", "config", "config-impl", "events", "internal", "ui", "utils")) {
-//            +module
-//        }
-//    }
+    useOneConfig {
+        version = "1.0.0-alpha.181"
+        loaderVersion = "1.1.0-alpha.54"
+        usePolyMixin = true
+        polyMixinVersion = "0.8.4+build.6"
+        applyLoaderTweaker = true
+        for (module in arrayOf("commands", "config", "config-impl", "events", "internal", "ui", "utils")) {
+            +module
+        }
+    }
 
     useDevAuth("1.2.1")
     useMixinExtras("0.5.0")
