@@ -5,7 +5,7 @@ mod.group = "com.example"
 mod.version = "0.1.0"
 
 deps.fabric_loader = "0.19.2"
-loomx.loom_version = "1.16-SNAPSHOT"
+loomx.loom_version = "1.17-SNAPSHOT"
 
 ["1.21.1"]
 mod.mc_compat = ">=1.21 <=1.21.1"

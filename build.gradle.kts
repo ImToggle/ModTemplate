@@ -61,8 +61,10 @@ loom {
     }
 
     runConfigs.all {
-        vmArgs("-Dmixin.debug.export=true") // Exports transformed classes for debugging
-        runDir = "../../run" // Shares the run directory between versions
+        preferGradleTask = true
+        generateRunConfig = true
+        runDirectory = rootProject.file("run") // Shares the run directory between versions
+        jvmArguments.add("-Dmixin.debug.export=true") // Exports transformed classes for debugging
     }
 }
 
