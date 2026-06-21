@@ -2,7 +2,7 @@ plugins {
     id("dev.kikugie.stonecutter")
 }
 
-stonecutter active "26.1"
+stonecutter active "26.2.x"
 
 // See https://stonecutter.kikugie.dev/wiki/config/params
 stonecutter parameters {
@@ -17,7 +17,7 @@ stonecutter parameters {
         }
 
         string(current.parsed >= "26.1") {
-            replace("classTweaker v1 named", "classTweaker v1 official")
+            replace("classTweaker v2 named", "classTweaker v2 official")
         }
     }
 }
