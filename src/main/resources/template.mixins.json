@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "com.example.mixin",
+  "package": "me.imtoggle.template.mixin",
   "compatibilityLevel": "${java}",
   "mixins": [
     "ExampleMixin"
