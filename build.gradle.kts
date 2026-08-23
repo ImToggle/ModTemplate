@@ -1,5 +1,6 @@
 plugins {
     id("dev.kikugie.loom-back-compat")
+    id("me.modmuss50.mod-publish-plugin") version "2.1.1"
     kotlin("jvm")
 }
 
@@ -17,6 +18,11 @@ val requiredJava: JavaVersion = when {
 val compatibleVersions: List<String> = sc.properties.rawOrNull("mod", "mc_releases")
     ?.asList().orEmpty().map { it.toString() }
 
+val accessWidener = when {
+    sc.current.parsed >= "26.1" -> "26.x.accesswidener"
+    else -> "1.21.x.accesswidener"
+}
+
 repositories {
     /**
      * Restricts dependency search of the given [groups] to the [maven URL][url],
@@ -32,21 +38,18 @@ repositories {
 }
 
 dependencies {
-
-    fun fapi(vararg modules: String) {
-        for (it in modules) modImplementation(fabricApi.module(it, sc.properties["deps.fabric_api"]))
-    }
-
     minecraft("com.mojang:minecraft:${sc.current.version}")
     loomx.applyMojangMappings()
 
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
     modImplementation("net.fabricmc:fabric-language-kotlin:1.13.12+kotlin.2.4.0")
-    fapi("fabric-lifecycle-events-v1", "fabric-resource-loader-v0", "fabric-content-registries-v0", "fabric-registry-sync-v0")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${sc.properties["deps.fabric_api"] as String}")
 }
 
 loom {
     fabricModJsonPath = rootProject.file("src/main/resources/fabric.mod.json")
+
+    accessWidenerPath = rootProject.file("src/main/resources/aw/$accessWidener")
 
     decompilerOptions.named("vineflower") {
         options.put("mark-corresponding-synthetics", "1")
@@ -84,6 +87,7 @@ tasks {
             register("name", "mod.name")
             register("version", "mod.version")
             register("minecraft", "mod.mc_compat")
+            set("aw_file", accessWidener)
         }
 
         filesMatching("fabric.mod.json") { expand(props) }
@@ -99,5 +103,22 @@ tasks {
         inputs.property("version", project.property("mod.version"))
         from(loomx.modJar.flatMap { it.archiveFile }, loomx.modSourcesJar.flatMap { it.archiveFile })
         into(rootProject.layout.buildDirectory.file("libs/${project.property("mod.version")}"))
+    }
+
+    publishMods {
+        file = loomx.modJar.get().archiveFile
+        changelog = project.rootProject.file("CHANGELOG.md").takeIf { it.exists() }?.readText() ?: "No changelog provided."
+        type = STABLE
+        modLoaders.add("fabric")
+
+        modrinth {
+            projectId = property("publish.modrinth").toString()
+            accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+            environment = CLIENT_ONLY
+            minecraftVersions.addAll(compatibleVersions)
+            requires("fabric-language-kotlin")
+            requires("modmenu")
+            requires("yacl")
+        }
     }
 }
