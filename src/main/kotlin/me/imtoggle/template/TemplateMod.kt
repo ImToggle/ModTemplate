@@ -8,4 +8,5 @@ class TemplateMod : ClientModInitializer {
     override fun onInitializeClient() {
         ModConfig.preload()
     }
+
 }
